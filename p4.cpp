@@ -10,15 +10,10 @@ using namespace std;
 class Board {
 private:
     vector<int> numbers;
-    bool** marked;
+    bool marked[5][5];
 public:
     Board(vector<int> numbers) : numbers(numbers) {
         assert(numbers.size() == 25);
-        marked = new bool*[5];
-        
-        for (int i = 0; i < 5; i++) {
-            marked[i] = new bool[5]();
-        }
     }
 
     int sum_unmarked() {

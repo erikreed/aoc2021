@@ -9,9 +9,18 @@ for line in lines:
         
 assert len(lines) == 1000
 
-digits = [d / len(lines) for d in digits]
-GAMMA = [round(d) for d in digits]
-EPSILON = [int(d <= .5) for d in digits]
+filtered_gamma = list(lines)
+for i in range(12):
+    c = 0
+    for line in filtered_gamma:
+        c += int(line[i])
+    common = c >= len(lines) / 2
+    for line in list(filtered_gamma):
+        if int(line[i]) != int(common):
+            filtered_gamma.remove(line)
+
+GAMMA = [int(d >= len(lines) / 2) for d in digits]
+EPSILON = [int(d <= len(lines) / 2) for d in digits]
 
 
 output = ''.join([str(d) for d in GAMMA])
@@ -37,12 +46,18 @@ def get_rating(bit_number, reference):
 
 o2_rating = ("", 0)
 co2_rating = ("", 0)
+import collections
+counts = collections.defaultdict(int)
 for line in lines:
     gamma_rating, epsilon_rating = get_rating(line, GAMMA), get_rating(line, EPSILON)
+    counts[('gamma', gamma_rating)] += 1
+    counts[('epsilon', epsilon_rating)] += 1
     if gamma_rating > o2_rating[1]:
         o2_rating = (line, gamma_rating)
     if epsilon_rating > co2_rating[1]:
         co2_rating = (line, epsilon_rating)
 
+print(sorted(counts.items()))
+print("o2_rating, co2_rating", o2_rating, co2_rating)
 print("life support product:")
 print_int_product(o2_rating[0], co2_rating[0])
